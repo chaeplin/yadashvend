@@ -12,12 +12,13 @@ from libs.printlogs import *
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import r_MQ_LIST, m_SALE_REQ_SUBSCRIBE
+from libs.config import r_CLIENT_LIST_SET, r_CLIENT_CMD_HASH
 
 import pprint
 
 def on_connect(client, userdata, flags, rc):
     global m_SALE_REQ_SUBSCRIBE
-    print_log('mqtt : Connected with result code ' + str(rc))
+    logging.info('[mqtt_queue] mqtt : Connected with result code ' + str(rc))
     client.subscribe(m_SALE_REQ_SUBSCRIBE, 0)
 
 def on_message(client, userdata, msg):
@@ -25,10 +26,20 @@ def on_message(client, userdata, msg):
     idcheck = msg.topic.replace('s/req/', '')
     req = json.loads(msg.payload)
     if idcheck == req['clientid']:
-        mq_result = r_rpush_key(r, r_MQ_LIST, str(msg.payload))
-        print_log('mqtt : type - ' + req['type'] + ' : clientid - ' + req['clientid'] + ' ---> queued')
+        # 1) add client to client list set
+        # 2) add payload to client hash
+        # 3) add clientd and namotime to r_MQ_LIST
+
+        epochnano = get_nanotime()
+        pipe = r.pipeline()
+        pipe.sadd(r_CLIENT_LIST_SET, idcheck)
+        pipe.hset(r_CLIENT_CMD_HASH + idcheck, epochnano, msg.payload)
+        pipe.lpush(r_MQ_LIST, {"clientid": idcheck, "tstamp": epochnano})
+        response = pipe.execute() 
+        logging.info('[mqtt_queue] mqtt : type - ' + req['cmd'] + ' : clientid - ' + req['clientid'] + ' ---> queued')
+
     else:
-        print_log('mqtt : topic - ' + msg.topic + ' payload - ' + str(msg.payload) + ' ---> discard')
+        logging.info('[mqtt_queue] mqtt : topic - ' + msg.topic + ' payload - ' + str(msg.payload) + ' ---> discard')
 
 
 # redis
@@ -38,11 +49,12 @@ r = redis.StrictRedis(connection_pool=POOL)
 pp = pprint.PrettyPrinter(indent=4)
 
 # check redis
+logging.info('[mqtt_queue] started')
 try:
     r.ping()
 
 except Exception as e:
-    print_log(e.args[0])
+    logging.info(e.args[0])
     sys.exit()
 
 
@@ -61,4 +73,5 @@ except Exception as e:
     sys.exit()
 
 except KeyboardInterrupt:
+    logging.info('[mqtt_queue] intterupted by keyboard')
     sys.exit(1)

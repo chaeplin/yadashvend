@@ -18,10 +18,10 @@ from libs.config import r_IX_LIST, r_BK_LIST
 
 import pprint
 
-# sequence
-hashblock_seq = "-1"
-rawtx_seq     = "-1"
-rawtxlock_seq = "-1"
+#?# sequence
+#?hashblock_seq = "-1"
+#?rawtx_seq     = "-1"
+#?rawtxlock_seq = "-1"
 
 # redis
 POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)
@@ -39,11 +39,12 @@ zmqSubSocket.connect("tcp://127.0.0.1:28332")
 pp = pprint.PrettyPrinter(indent=4)
 
 # check redis
+logging.info('[ix_bl_queue] started')
 try:
     r.ping()
 
 except Exception as e:
-    print_log(e.args[0])
+    logging.info(e.args[0])
     sys.exit()
 
 
@@ -61,25 +62,28 @@ try:
 
         if topic == 'rawtx':
             addrval = decoderawtx(body)
-            print_log('tx : [' + sequence + '] ')
+            logging.info('[ix_bl_queue] tx : [' + sequence + '] ')
 
             if len(addrval) > 0:
                 for key in addrval.keys():
                     key_to_queue = { 'addr': key, 'val': addrval[key]['val'], 'txid': addrval[key]['txid'] }
-                    ix_to_queue  = r_rpush_key(r, r_IX_LIST, key_to_queue)
-                    print_log('\t--> addr: ' + key + ' txid : ' + addrval[key]['txid'] + ' val: ' + addrval[key]['val'])
+                    ix_to_queue  = r_lpush_key(r, r_IX_LIST, key_to_queue)
+                    logging.info('[ix_bl_queue] \t--> addr: ' + key + ' txid : ' + addrval[key]['txid'] + ' val: ' + addrval[key]['val'])
 
         elif topic == "hashblock":
-            bk_to_queue = r_rpush_key(r, r_BK_LIST, body)
-            print_log('bl : [' + sequence + '] ' + body)
+            bk_to_queue = r_lpush_key(r, r_BK_LIST, body)
+            logging.info('[ix_bl_queue] bl : [' + sequence + '] ' + body)
 
         elif topic == 'hashtx':
-            print_log('tx : [' + sequence + '] ' + body)
+            logging.info('[ix_bl_queue] tx : [' + sequence + '] ' + body)
 
+except Exception as e:
+    print(e.args[0])
+    sys.exit()
 
 except KeyboardInterrupt:
     zmqContext.destroy()
-    print_log('intterupted by keyboard')
+    logging.info('[ix_bl_queue] intterupted by keyboard')
     sys.exit()
 
 

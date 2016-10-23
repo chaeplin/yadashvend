@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 import binascii, re, json, copy, sys
 import base64
 import bitcoin
