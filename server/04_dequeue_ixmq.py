@@ -58,11 +58,8 @@ def process_mq(r_val):
             else:
                 logging.info('[dequeue_ix_mq] addr is in used pool :' + newaddr)
                 
-    
-        r_redis_sadd(r, r_USED_ADDR_SET, newaddr)
-        r_redis_sadd(r, r_SALE_ADDR_SET, newaddr)
-    
-        # 2)
+
+        #
         addrdict = {
                     'clientid': clientid,
                     'tstamp:issued': tstamp,
@@ -72,12 +69,8 @@ def process_mq(r_val):
                     'msgid': msgid,
                     'status': 'onsale'
         }
-    
-        r_hmset(r, r_ADDR_CMD_HASH + newaddr, addrdict)
 
-        # 3)
         topic = m_SALE_DIS_PUBLISH + clientid
-
         payload = {
                 'addr': newaddr,
                 'val': r_SALE_PRICE,
@@ -85,6 +78,11 @@ def process_mq(r_val):
                 'msgid': msgid
         }
 
+        pipe = r.pipeline()
+        pipe.sadd(r_USED_ADDR_SET, newaddr)
+        pipe.sadd(r_SALE_ADDR_SET, newaddr)
+        pipe.hmset(r_ADDR_CMD_HASH + newaddr, addrdict)
+        response = pipe.execute()
         mqtt_publish(topic, json.dumps(payload))
 
     elif cmd == 'change':
@@ -143,6 +141,9 @@ def process_ix(r_val):
                     pipe.hset(r_CLIENT_CMD_HASH + order_clientid, 'resp:'+str(epochnano), payload) 
                     response = pipe.execute()
                     mqtt_publish(topic, json.dumps(payload))
+
+                    r_hgetall(r, r_ADDR_CMD_HASH + addr)
+                    r_hgetall(r, r_CLIENT_CMD_HASH + order_clientid)
 
         else:
             pass

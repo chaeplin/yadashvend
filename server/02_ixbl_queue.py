@@ -55,19 +55,16 @@ try:
           msgSequence = struct.unpack('<I', msg[-1])[-1]
           sequence = str(msgSequence)
 
-        if topic == 'rawtx':
+        if topic == 'rawtxlock':
             addrval = decoderawtx(body)
-            #logging.info('[ix_bl_queue] tx : [' + sequence + '] ')
 
             if len(addrval) > 0:
                 for key in addrval.keys():
                     key_to_queue = { 'addr': key, 'val': addrval[key]['val'], 'txid': addrval[key]['txid'] }
                     ix_to_queue  = r_lpush_key(r, r_IX_LIST, json.dumps(key_to_queue))
-                    #logging.info('[ix_bl_queue] \t--> addr: ' + key + ' txid : ' + addrval[key]['txid'] + ' val: ' + addrval[key]['val'])
 
         elif topic == "hashblock":
             bk_to_queue = r_lpush_key(r, r_BK_LIST, body)
-            #logging.info('[ix_bl_queue] bl : [' + sequence + '] ' + body)
 
         elif topic == 'hashtx':
             logging.info('[ix_bl_queue] tx : [' + sequence + '] ' + body)
