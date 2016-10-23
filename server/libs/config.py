@@ -24,7 +24,7 @@ r_CLIENT_LIST_SET = key_prefix + 'CLIENT_LIST'
 
 # hash key, client, 
 r_ADDR_CMD_HASH   = key_prefix + 'ADDR:'
-r_CLIENT_CMD_HASH =  key_prefix + 'CLIENT:'
+r_CLIENT_CMD_HASH = key_prefix + 'CLIENT:'
 
 # list for ix tx and blk hash
 r_IX_LIST = key_prefix + 'IX_RECEIVED'

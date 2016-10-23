@@ -31,10 +31,22 @@ def on_message(client, userdata, msg):
         # 3) add clientd and namotime to r_MQ_LIST
 
         epochnano = get_nanotime()
+        clientinfo = {}
+        clientinfo["clientid"] = idcheck
+        clientinfo["tstamp"]   = epochnano
+        clientinfo["cmd"]      = req['cmd']
+        clientinfo["item"]     = req['item']
+        clientinfo["msgid"]    = req['msgid']
+        
         pipe = r.pipeline()
+        # client list
         pipe.sadd(r_CLIENT_LIST_SET, idcheck)
-        pipe.hset(r_CLIENT_CMD_HASH + idcheck, epochnano, msg.payload)
-        pipe.lpush(r_MQ_LIST, {"clientid": idcheck, "tstamp": epochnano})
+        # client cmd last stamp
+        pipe.hset(r_CLIENT_CMD_HASH + idcheck, 'lasttstamp', str(epochnano))
+        # client last cmd info 
+        pipe.hset(r_CLIENT_CMD_HASH + idcheck, 'req:'+str(epochnano), msg.payload)
+        # mq cmd to queue
+        pipe.lpush(r_MQ_LIST, json.dumps(clientinfo))
         response = pipe.execute() 
         logging.info('[mqtt_queue] mqtt : type - ' + req['cmd'] + ' : clientid - ' + req['clientid'] + ' ---> queued')
 

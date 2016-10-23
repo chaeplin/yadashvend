@@ -2,56 +2,63 @@ import redis
 from libs.printlogs import *
 
 def r_chk_key(r, key):
-    pipe = r.pipeline()
-    response = pipe.exists(key).execute()
+    response = r.exists(key)
     logging.info('[r_chk_key] ' + key + ' : ' + str(response))
     return response
 
 def r_get_key(r, key):
-    pipe = r.pipeline()
-    response = pipe.get(key).execute()
+    response = r.get(key)
     logging.info('[r_get_key] ' + key + ' : ' + str(response))
     return response
 
 def r_set_key(r, key, value):
-    pipe = r.pipeline()
-    response = pipe.set(key, value).execute()
+    response = r.set(key, value)
     logging.info('[r_set_key] ' + key + ' : ' + str(response))
     return response
 
 def r_del_key(r, key):
-    pipe = r.pipeline()
-    response = pipe.delete(key).execute()
+    response = r.delete(key)
     logging.info('[r_del_key] ' + key + ' : ' + str(response))
     return response
 
 def r_lpush_key(r, listname, key):
-    pipe = r.pipeline()
-    response = pipe.lpush(listname, key).execute()
+    response = r.lpush(listname, key)
     logging.info('[r_lpush_key] ' + listname + ' : ' + str(key) + ' : ' + str(response))
     return response
 
 def r_spop_key(r, key):
-    pipe = r.pipeline()
-    response = pipe.spop(key).execute()
+    response = r.spop(key)
     logging.info('[r_spop_key] ' + str(key) + ' : ' + str(response))
     return response
 
 def r_redis_sadd(r, setname, key):
-    pipe = r.pipeline()
-    response = pipe.sadd(setname, str(key)).execute()
+    response = r.sadd(setname, str(key))
     logging.info('[r_redis_sadd] ' +  setname + ' : ' +  key + ' : ' + str(response))
     return response
 
+def r_redis_srem(r, key, val):
+    response = r.srem(key, val)
+    logging.info('[r_redis_srem key: ' + key + ' val: ' + str(val) + ' --> ' + str(response))
+    return response
+
 def r_redis_blpop(r, quelist):
-    response = r.blpop(quelist, 10)
+    response = r.blpop(quelist, 1)
     if response != None:
         logging.info('[r_redis_blpop] ' + str(response))
         return response
 
 def r_rpoplpush(r, src, dst):
-    pipe = r.pipeline()
-    response = pipe.rpoplpush(src, dst).execute()
-    logging.info('[r_rpoplpush] ' + str(response))
+    response = r.rpoplpush(src, dst)
+    logging.info('[r_rpoplpush] src: ' + src + ' dst: ' + dst + ' ' + str(response))
     return response
  
+def r_hmset(r, key, val):
+    response = r.hmset(key, val)
+    logging.info('[r_hmset] key: ' + key + ' val: ' + str(val) + ' --> ' + str(response))
+    return response
+
+def r_hgetall(r, key):
+    response = r.hgetall(key)
+    logging.info('[r_hgetall] key: ' + key + ' --> ' + str(response))
+    return response
+

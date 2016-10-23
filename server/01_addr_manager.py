@@ -33,17 +33,15 @@ except Exception as e:
 #
 key = Key.from_text(BIP32_TESTNET_SEED)
 
-#
-#r_del_key(r, r_ADDR_GEN_INDEX)
-#r_del_key(r, r_NEW_ADDR_SET)
 
 # check current index
 get_r_ADDR_GEN_INDEX = r_get_key(r, r_ADDR_GEN_INDEX)
-if get_r_ADDR_GEN_INDEX[0] == None:
+
+if get_r_ADDR_GEN_INDEX == None:
     current_index = 0
 
 else:
-    current_index = int(get_r_ADDR_GEN_INDEX[0])
+    current_index = int(get_r_ADDR_GEN_INDEX)
 
 
 #
