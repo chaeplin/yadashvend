@@ -5,11 +5,11 @@ Yet Another DashVend
 * testnet only
 * dashd zmq + redis + mqtt
 * no refund yet
-* no timout on onsale key yet
+* no timout on onsale addr yet
 * most codes from https://github.com/moocowmoo/dashvend
 
-- request a addr and price using mqtt
-- ix to addr
-- mqtt msg returned
+* request an addr and price using mqtt
+* ix to the addr
+* mqtt msg returned
 
 ![image](./pics/mqtt.png)
