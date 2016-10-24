@@ -55,7 +55,9 @@ try:
           msgSequence = struct.unpack('<I', msg[-1])[-1]
           sequence = str(msgSequence)
 
-        if topic == 'rawtxlock':
+        # for test, rawtx is used. on zmq side, rawtx == rawtxlock(locked by masternode)
+        #if topic == 'rawtxlock':
+        if topic == 'rawtx':
             addrval = decoderawtx(body)
 
             if len(addrval) > 0:
