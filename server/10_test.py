@@ -33,13 +33,13 @@ except Exception as e:
 
 #
 #
-#r.flushdb()
+r.flushdb()
 #sys.exit()
 #
-
+#
 
 # -------- #
-CLIENT_NAME = 'client1'
+CLIENT_NAME = 'ihavenonameyet'
 
 try:
     print('r_MQ_LIST') 

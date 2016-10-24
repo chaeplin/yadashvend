@@ -55,9 +55,8 @@ try:
           msgSequence = struct.unpack('<I', msg[-1])[-1]
           sequence = str(msgSequence)
 
-        # for test, rawtx is used. on zmq side, rawtx == rawtxlock(locked by masternode)
-        #if topic == 'rawtxlock':
         if topic == 'rawtx':
+            logging.info('[ix_bl_queue] rawtx : [' + sequence + '] ' + body)
             addrval = decoderawtx(body)
 
             if len(addrval) > 0:
@@ -70,6 +69,9 @@ try:
 
         elif topic == 'hashtx':
             logging.info('[ix_bl_queue] tx : [' + sequence + '] ' + body)
+
+        elif topic == 'rawtxlock':
+            logging.info('[ix_bl_queue] rawtxlock : [' + sequence + '] ' + body)
 
 except Exception as e:
     print(e.args[0])
