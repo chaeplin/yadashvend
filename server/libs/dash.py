@@ -1,6 +1,7 @@
 import binascii, re, json, copy, sys
 import base64
 import bitcoin
+import random
 from pycoin.key import Key
 from hashlib import sha256
 from bitcoin import SelectParams
@@ -145,4 +146,6 @@ def get_bip32_address_info(key, index):
     addr = key.subkey(index).address(use_uncompressed=False)
     return { "index": index, "addr": addr }
 
+def get_sale_price():
+    return round(random.uniform(0.02, 2), 3)
 # end

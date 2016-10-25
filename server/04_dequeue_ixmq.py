@@ -60,11 +60,12 @@ def process_mq(r_val):
                 
 
         #
+        r_random_price = get_sale_price()
         addrdict = {
                     'clientid': clientid,
                     'tstamp:issued': tstamp,
                     'item': item,
-                    'val': r_SALE_PRICE,
+                    'val': r_random_price,
                     'cmd': cmd,
                     'msgid': msgid,
                     'status': 'onsale'
@@ -73,7 +74,7 @@ def process_mq(r_val):
         topic = m_SALE_DIS_PUBLISH + clientid
         payload = {
                 'addr': newaddr,
-                'val': r_SALE_PRICE,
+                'val': r_random_price,
                 'cmd': cmd,
                 'msgid': msgid
         }
@@ -142,8 +143,8 @@ def process_ix(r_val):
                     response = pipe.execute()
                     mqtt_publish(topic, json.dumps(payload))
 
-                    r_hgetall(r, r_ADDR_CMD_HASH + addr)
-                    r_hgetall(r, r_CLIENT_CMD_HASH + order_clientid)
+                    #r_hgetall(r, r_ADDR_CMD_HASH + addr)
+                    #r_hgetall(r, r_CLIENT_CMD_HASH + order_clientid)
 
         else:
             pass
