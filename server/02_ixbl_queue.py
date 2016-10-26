@@ -55,7 +55,7 @@ try:
           msgSequence = struct.unpack('<I', msg[-1])[-1]
           sequence = str(msgSequence)
 
-        if topic == 'rawtx':
+        if topic == 'rawtxlock':
             logging.info('[ix_bl_queue] rawtx : [' + sequence + '] ' + body)
             addrval = decoderawtx(body)
 
@@ -70,8 +70,8 @@ try:
         elif topic == 'hashtx':
             logging.info('[ix_bl_queue] tx : [' + sequence + '] ' + body)
 
-        elif topic == 'rawtxlock':
-            logging.info('[ix_bl_queue] rawtxlock : [' + sequence + '] ' + body)
+        #elif topic == 'rawtxlock':
+        #    logging.info('[ix_bl_queue] rawtxlock : [' + sequence + '] ' + body)
 
 except Exception as e:
     print(e.args[0])
