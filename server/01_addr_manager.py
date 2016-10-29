@@ -61,7 +61,7 @@ try:
         
         else:
             logging.info('[addr_manager] enough keys, sleep 60 secs')
-            time.sleep(60)
+            time.sleep(10)
         
 except Exception as e:
     print(e.args[0])

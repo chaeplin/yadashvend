@@ -39,7 +39,7 @@ r.flushdb()
 #
 
 # -------- #
-CLIENT_NAME = 'ihavenonameyet'
+CLIENT_NAME = 'ihavenonameyet2'
 
 try:
     print('r_MQ_LIST') 

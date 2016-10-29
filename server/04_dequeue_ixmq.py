@@ -60,7 +60,18 @@ def process_mq(r_val):
                 
 
         #
+#        addrdict = {
+#                    'clientid': clientid,
+#                    'tstamp:issued': tstamp,
+#                    'item': item,
+#                    'val': r_SALE_PRICE,
+#                    'cmd': cmd,
+#                    'msgid': msgid,
+#                    'status': 'onsale'
+#        }
+
         r_random_price = get_sale_price()
+
         addrdict = {
                     'clientid': clientid,
                     'tstamp:issued': tstamp,
@@ -72,6 +83,13 @@ def process_mq(r_val):
         }
 
         topic = m_SALE_DIS_PUBLISH + clientid
+#        payload = {
+#                'addr': newaddr,
+#                'val': r_SALE_PRICE,
+#                'cmd': cmd,
+#                'msgid': msgid
+#        }
+
         payload = {
                 'addr': newaddr,
                 'val': r_random_price,

@@ -146,6 +146,9 @@ def get_bip32_address_info(key, index):
     addr = key.subkey(index).address(use_uncompressed=False)
     return { "index": index, "addr": addr }
 
+
 def get_sale_price():
     return round(random.uniform(0.02, 2), 3)
+
+
 # end

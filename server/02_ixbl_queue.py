@@ -70,8 +70,8 @@ try:
         elif topic == 'hashtx':
             logging.info('[ix_bl_queue] tx : [' + sequence + '] ' + body)
 
-        #elif topic == 'rawtxlock':
-        #    logging.info('[ix_bl_queue] rawtxlock : [' + sequence + '] ' + body)
+#        elif topic == 'rawtxlock':
+#            logging.info('[ix_bl_queue] rawtxlock : [' + sequence + '] ' + body)
 
 except Exception as e:
     print(e.args[0])
