@@ -7,13 +7,17 @@ import sys
 import simplejson as json
 import redis
 
-from libs.printlogs import *
+import logging
+import os
+
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import BIP32_TESTNET_SEED, r_ADDR_GEN_INDEX, r_NEW_ADDR_SET, max_keys_in_r_NEW_ADDR_SET
 
 import pprint
 
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../logs/' + os.path.basename(__file__) + '.log')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s')
 
 # redis
 POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)

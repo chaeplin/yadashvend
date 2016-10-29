@@ -7,8 +7,11 @@ import sys
 import simplejson as json
 import redis
 import paho.mqtt.publish as mqtt
+import nanotime
 
-from libs.printlogs import *
+import logging
+import os
+
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import r_IX_LIST, r_MQ_LIST 
@@ -19,11 +22,17 @@ from libs.config import m_SALE_DIS_PUBLISH
 
 import pprint
 
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../logs/' + os.path.basename(__file__) + '.log')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s')
+
 # redis
 POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)
 r = redis.StrictRedis(connection_pool=POOL)
 
 pp = pprint.PrettyPrinter(indent=4)
+
+def get_nanotime():
+    return int(nanotime.now().unixtime() * 1000000000)
 
 def mqtt_publish(topic, payload):
     mqtt.single(topic, payload, qos=0, retain=0, hostname='127.0.0.1', port=1883)

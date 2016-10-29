@@ -11,12 +11,17 @@ import struct
 import redis
 import zmq
 
-from libs.printlogs import *
+import logging
+import os
+
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import r_IX_LIST, r_BK_LIST
 
 import pprint
+
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../logs/' + os.path.basename(__file__) + '.log')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s')
 
 # redis
 POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)

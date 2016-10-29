@@ -7,14 +7,23 @@ import sys
 import simplejson as json
 import redis
 import paho.mqtt.client as mqtt
+import nanotime
 
-from libs.printlogs import *
+import logging
+import os
+
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import r_MQ_LIST, m_SALE_REQ_SUBSCRIBE
 from libs.config import r_CLIENT_LIST_SET, r_CLIENT_CMD_HASH
 
 import pprint
+
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../logs/' + os.path.basename(__file__) + '.log')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s')
+
+def get_nanotime():
+    return int(nanotime.now().unixtime() * 1000000000)
 
 def on_connect(client, userdata, flags, rc):
     global m_SALE_REQ_SUBSCRIBE
