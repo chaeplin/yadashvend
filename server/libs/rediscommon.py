@@ -1,5 +1,5 @@
 import redis
-from logging
+import logging
 
 def r_chk_key(r, key):
     response = r.exists(key)
