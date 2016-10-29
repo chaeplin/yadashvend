@@ -60,7 +60,7 @@ try:
                 r_redis_sadd(r, r_NEW_ADDR_SET, addr)
                 current_index = r.incr(r_ADDR_GEN_INDEX)
 
-                if r.scard(r_NEW_ADDR_SET) > max_keys_in_r_NEW_ADDR_SET:
+                if r.scard(r_NEW_ADDR_SET) > (max_keys_in_r_NEW_ADDR_SET * 2):
                     break
         
         else:
