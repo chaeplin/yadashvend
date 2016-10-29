@@ -8,7 +8,9 @@ import simplejson as json
 import redis
 import paho.mqtt.client as mqtt
 
-from libs.printlogs import *
+import logging
+import os
+
 from libs.dash import *
 from libs.rediscommon import *
 from libs.config import r_MQ_LIST, r_IX_LIST, r_BK_LIST, m_SALE_REQ_SUBSCRIBE
@@ -17,6 +19,10 @@ from libs.config import r_NEW_ADDR_SET, r_USED_ADDR_SET, r_SALE_ADDR_SET
 from libs.config import r_ADDR_CMD_HASH
 
 import pprint
+
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../logs/' + os.path.basename(__file__) + '.log')
+logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s')
+
 
 # redis
 POOL = redis.ConnectionPool(host='localhost', port=6379, db=0)
